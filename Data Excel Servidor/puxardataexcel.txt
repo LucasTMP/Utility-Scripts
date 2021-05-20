@@ -1,0 +1,64 @@
+Function GetUCTTimeDate() As Date
+    
+    Dim UTCDateTime As String
+    Dim arrDT() As String
+    Dim http As Object
+    Dim Dia As String
+    Dim Hora As Date
+    Dim Data As String
+    Dim Mes As String
+    Dim DataFull As Date
+
+    Const NetTime As String = "https://time.is/pt_br/São_Paulo"
+
+    On Error Resume Next
+    Set http = CreateObject("Microsoft.XMLHTTP")
+    On Error GoTo 0
+
+    http.Open "GET", NetTime & Now(), False, "", ""
+    http.Send
+
+    UTCDateTime = http.getResponseHeader("Date")
+    Dia = Mid(UTCDateTime, InStr(UTCDateTime, ",") + 2, 2)
+    Mes = Mid(UTCDateTime, InStr(UTCDateTime, ",") + 5, 3)
+    Ano = Mid(UTCDateTime, InStr(UTCDateTime, ",") + 9, 4)
+    Hora = TimeValue(Mid(UTCDateTime, InStrRev(UTCDate, " ") + 18, 8)) - CDate("03:00:00")
+    'GetUCTTimeDate = DateValue(UTCDate) + TimeValue(UTCTime)
+    
+    Select Case Mes
+    Case "Jan"
+    Mes = "01"
+    Case "Feb"
+    Mes = "02"
+    Case "Mar"
+    Mes = "03"
+    Case "Apr"
+    Mes = "04"
+    Case "May"
+    Mes = "05"
+    Case "June"
+    Mes = "06"
+    Case "July"
+    Mes = "07"
+    Case "Aug"
+    Mes = "08"
+    Case "Sept"
+    Mes = "09"
+    Case "Oct"
+    Mes = "10"
+    Case "Nov"
+    Mes = "11"
+    Case "Dec"
+    Mes = "12"
+    Case Else
+    Debug.Print "Não encontrou o mes."
+    End Select
+    
+    Data = Dia & "/" & Mes & "/" & Ano
+    DataFull = DateValue(Data) + TimeValue(Hora)
+    
+    MsgBox "A data atual é: " & DataFull, NewNow, vbOKOnly
+    
+    GetUCTTimeDate = DataFull
+    
+End Function
